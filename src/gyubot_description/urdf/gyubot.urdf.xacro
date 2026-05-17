@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<robot name="gyubot" xmlns:xacro="http://www.ros.rog/wiki/xacro">
+    <!-- Base Link 로봇의 물리적/기하학적 중심이 되는 최초의 뼈대입니다. -->
+     <link name="base_link">
+        <visual>
+            <!-- 크기가 x: 0.5m, y: 0.4m, z: 0.2m 인 직육면체 상자를 표현합니다. -->
+            <geometry>
+                <box size="0.5 0.4 0.2"/>
+            </geometry>
+            <!-- 로봇 본체의 색상을 파란색으로 지정합니다. (R, G, B, Alpha) -->
+            <material name="blue">
+                <color rgba="0.0 0.0 0.8 1.0"/>
+            </material>
+        </visual>
+     </link>
+</robot>
