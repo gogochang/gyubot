@@ -15,19 +15,28 @@
     <xacro:property name="wheel_yoff" value="${base_width/2 + wheel_width/2 + wheel_ygap}"/>
     <xacro:property name="wheel_zoff" value="0.05" />
 
-    <!-- 2. Base Link 정의 -->
+    <!-- 2. 재질(Material) 정의 -->
+    <material name="blue">
+        <color rgba="0.0 0.0 0.8 1.0"/>
+    </material>
+    <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+    </material>
+    <material name="white">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+    </material>
+
+    <!-- 3. Base Link 정의 -->
     <link name="base_link">
         <visual>
             <geometry>
                 <box size="${base_length} ${base_width} ${base_height}"/>
             </geometry>
-            <material name="blue">
-                <color rgba="0.0 0.0 0.8 1.0"/>
-            </material>
+            <material name="blue"/>
         </visual>
     </link>
 
-    <!-- 3. 바퀴 매크로 (Wheel Macro) -->
+    <!-- 4. 바퀴 매크로 (Wheel Macro) -->
     <!-- 매크로는 프로그래밍의 '함수'와 같다. 바퀴 4개를 일일이 코딩하지 않고 이 틀을 사용함-->
     <xacro:macro name="wheel" params="prefix x_reflect y_reflect">
         <link name="${prefix}_wheel">
@@ -37,11 +46,29 @@
                  <geometry>
                     <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
                  </geometry>
-                 <material name="black">
-                    <color rgba="0.0 0.0 0.0 1.0"/>
-                 </material>
+                 <material name="black"/>
             </visual>
         </link>
+
+        <!-- 회전 확인용 인디케이터 (별도 링크로 분리) -->
+        <!-- Gazebo 등 일부 환경에서는 하나의 링크에 여러 visual이 있을 경우 재질이 하나로 통일되는 문제가 있음 -->
+        <!-- 이를 해결하기 위해 별도의 링크로 분리하고 fixed joint로 연결함 -->
+        <link name="${prefix}_wheel_indicator">
+            <visual>
+                <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+                <geometry>
+                    <!-- 바퀴 옆면에 붙은 작은 사각형 -->
+                     <box size="0.03 0.01 ${wheel_width + 0.002}"/>
+                </geometry>
+                <material name="white"/>
+            </visual>
+        </link>
+
+        <joint name="${prefix}_indicator_joint" type="fixed">
+            <parent link="${prefix}_wheel"/>
+            <child link="${prefix}_wheel_indicator"/>
+            <origin xyz="${wheel_radius - 0.02} 0 0" rpy="0 0 0"/>
+        </joint>
 
         <!-- Joint: base_link와 바퀴를 연결 -->
         <joint name="${prefix}_joint" type="continuous">
@@ -53,7 +80,7 @@
         </joint>
     </xacro:macro>
 
-    <!-- 4. 매크로 호출 (4개의 바퀴 생성) -->
+    <!-- 5. 매크로 호출 (4개의 바퀴 생성) -->
     <xacro:wheel prefix="front_left" x_reflect="1" y_reflect="1" />
     <xacro:wheel prefix="front_right" x_reflect="1" y_reflect="-1" />
     <xacro:wheel prefix="rear_left" x_reflect="-1" y_reflect="1" />
