@@ -45,6 +45,7 @@
 ### Step 4: 로봇 바퀴(Wheels) 및 Joint 설정 (2026-05-18)
 - **수행 내용**: gyubot.urdf.xacro 파일을 수정하여 로봇 본체(base_link)에 4개의 바퀴를 부착하고, 회전 가능한 관절(continuous joint)을 설정함.
 <img src="./step4.png" width="600px" alt="Step 4 결과">
+
 - **학습 포인트**:
     - **Xacro Property (상수)**: `<xacro:property>`를 사용하여 로봇의 치수 데이터(너비, 길이, 반지름 등)를 변수로 관리, 크기 변경 시 유지보수성을 극대화함.
     - **Xacro Macro (매크로)**: `<xacro:macro>`를 사용하여 반복되는 바퀴 모델링 코드를 함수처럼 정의하고 재사용함
