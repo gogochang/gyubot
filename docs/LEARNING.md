@@ -68,10 +68,16 @@
 - **수행 내용**: URDF 모델을 Gazebo 물리 시뮬레이션에 소환하고, teleop_twist_keyboard를 이용해 로봇을 직접 조종함.
 - **실행 명령어**:
     ```
+    # 0. 세팅
+    cd ~/gyubot_ws
+    colcon build --symlink-install --packages-select gyubot_description
+    source install/setup.bash
+
     # 1. Gazebo 실행 및 로봇 스폰
     ros2 launch gyubot_description gazebo.launch.py
 
     # 2. 키보드 제어 노드 실행 (새 터미널)
+    source ~/gyubot_ws/install/setup.bash
     ros2 run teleop_twist_keyboard teleop_twist_keyboard
     ```
 - **학습 포인트**:
