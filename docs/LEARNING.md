@@ -63,3 +63,22 @@
 - **트러블슈팅 기록**:
     1. **재질 색상 상속 문제**: 바퀴와 인디케이터가 하나의 링크 안에 있을 때 Gazebo, RViz 등에서 색상이 검은색으로 통일되는 현상 발생
     2. **해결 방법**: 인디케이터를 `${prefix}_wheel_indicator`라는 독립 링크로 분리하고, 이를 바퀴 링크에 `fixed`타입으로 연결하여 각 객체가 고유의 색상(Black, White)을 유지하도록 해결함.
+---
+### Step 6: Gazebo 시뮬레이션 환경 구축 및 기초 제어 구현 (2026-05-19)
+- **수행 내용**: URDF 모델을 Gazebo 물리 시뮬레이션에 소환하고, teleop_twist_keyboard를 이용해 로봇을 직접 조종함.
+- **실행 명령어**:
+    ```
+    # 1. Gazebo 실행 및 로봇 스폰
+    ros2 launch gyubot_description gazebo.launch.py
+
+    # 2. 키보드 제어 노드 실행 (새 터미널)
+    ros2 run teleop_twist_keyboard teleop_twist_keyboard
+    ```
+- **학습 포인트**:
+    - **Gazebo Plugin (skid_steer_drive): URDF 내부에 작성된 플러그인이 ROS2의 `cmd_vel` 메시지를 수신하여 가상의 바퀴 관절을 구동하는 원리를 이해함.
+    - **Spawn Entity**: `robot_state_publisher`가 배포하는 `robot_description`토픽을 읽어와 Gazebo 월드 내에 동적으로 로봇을 생성하는 과정을 학습함.
+    - **물리 파라미터 튜닝**: `max_wheel_acceleration`과 `max_wheel_torque` 값이 로봇의 반응성(반응 속도 및 가속감)에 미치는 영향을 파악함.
+    - **Launch 파일 구성**: `ParameterValue`를 사용하여 ROS2 Humble에서 발생하는 YAML 파싱 오류를 해결하고, 소환 위치(-z 옵션)를 조정하여 물리 엔진 충돌을 방지함.
+
+- **트러블 슈팅 기록**:
+    1. **지면 충돌(Inertia Error)**: 로봇이 지면 아래로 파묻혀 소환될 경우 물리 엔진이 로봇을 튕겨내어 보이지 않는 문제 발생. 런치 파일의 `spawn_entity` 인자에 -z 0.2를 추가하여 공중에서 안전하게 소환되도록 수정함.

@@ -5,6 +5,14 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+# Install directories
+# src/ 폴더에 있는 리소스들(urdf, launch 등)을 설치(install) 폴더의 share 경로로 복사합니다.
+# 이 과정을 거쳐야 ros2 launch 명령어가 해당 파일들을 찾을 수 있습니다.
+install(
+  DIRECTORY urdf meshes launch rviz config
+  DESTINATION share/${PROJECT_NAME}
+)
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 # uncomment the following section in order to fill in
@@ -25,10 +33,3 @@ endif()
 
 ament_package()
 
-# Install directories
-# src/ 폴더에 있는 리소스들(urdf, launch 등)을 설치(install) 폴더의 share 경로로 복사합니다.
-# 이 과정을 거쳐야 ros2 launch 명령어가 해당 파일들을 찾을 수 있습니다.
-install(
-  DIRECTORY urdf meshes launch rviz config
-  DESTINATION share/${PROJECT_NAME}
-)
